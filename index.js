@@ -19,7 +19,12 @@ clearBtn.addEventListener('click', () => {
 });
 
 deleteBtn.addEventListener('click', () => {
-    userInput.textContent;
+    let str = userInput.textContent.split('');
+    str.pop();
+    userInput.textContent = str.join('');
+    if (userInput.textContent == '') {
+        userInput.textContent = '0';
+    }
 });
 
 calculatorBtns.forEach(btn => btn.addEventListener('click', (e) => {
