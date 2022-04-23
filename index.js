@@ -6,13 +6,8 @@ const deleteBtn = document.querySelector('.delete-btn');
 
 const calculatorBtns = document.querySelectorAll('.calculator-btn');
 
-let firstOperand;
-let secondOperand;
-let operation;
-let result;
-
 clearBtn.addEventListener('click', () => {
-    userInput.textContent = '';
+    userInput.textContent = '0';
     firstOperand = 0;
     secondOperand = 0;
     result = 0;
@@ -27,12 +22,9 @@ deleteBtn.addEventListener('click', () => {
     }
 });
 
-calculatorBtns.forEach(btn => btn.addEventListener('click', (e) => {
-    // console.log(e.target.textContent);
-    userInput.textContent += e.target.textContent.trim();
+calculatorBtns.forEach(btn => btn.addEventListener('click', () => {
+    
 }));
-
-
 
 function add(a, b) {
     return a + b;
