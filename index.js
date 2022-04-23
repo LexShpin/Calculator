@@ -13,6 +13,8 @@ clearBtn.addEventListener('click', () => {
     result = 0;
 });
 
+// tst
+
 deleteBtn.addEventListener('click', () => {
     let str = userInput.textContent.split('');
     str.pop();
