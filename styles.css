@@ -1,13 +1,15 @@
 .calculator {
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 .calculator__panel {
     display: flex;
+    gap: 10px;
 }
 
-.calculator-operands {
+.calculator-operations {
     display: flex;
     flex-direction: column;
 }
