@@ -1,7 +1,26 @@
+* {
+    box-sizing: border-box;
+}
+
+button {
+    padding: 15px;
+}
+
+.clear-btn, .delete-btn {
+    width: 90px;
+}
+
+.dot-btn {
+    width: 31%;
+}
+
 .calculator {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    border: 3px solid black;
+    padding: 25px;
+    width: 250px;
 }
 
 .calculator__panel {
@@ -16,7 +35,8 @@
 
 .user-input {
     border: 1px solid black;
-    width: 150px;
+    width: 185px;
+    padding: 15px;
 }
 
 .result-field {
