@@ -2,9 +2,12 @@
 // Calculator variables
 let firstNumber
 let secondNumber
-let operator
+let result
+let firstOperation = true
 
-const operators = ['+', '-', 'x', '÷']
+let currentNumber
+
+let operator = null
 
 // Document elements
 const calculatorOperators = document.querySelectorAll('.calculator__operator')
@@ -29,19 +32,17 @@ const multiply = (a, b) => {
 
 const divide = (a, b) => {
     if (a == 0 || b == 0) {
-        // Display a message that it's wrong!
+        updateCurrentOperationInput(`You can't divide by zero, duh!`)
         return
     } 
     return a / b
 }
 
 const operate = (firstNumber, secondNumber, operator) => {
-    operator(firstNumber, secondNumber)
+    return operator(firstNumber, secondNumber)
 }
 
 const updateCurrentOperationInput = (text) => {
-    let usingOperator
-
     // If it's a dot, zero or operator don't add anything
     if (currentOperationInput.textContent == '') {
         if (text == '.' || text == '0' || text == '+' || text == 'x' || text == '-' || text == '÷') {
@@ -49,14 +50,30 @@ const updateCurrentOperationInput = (text) => {
         }
     }
 
+    if (text == '=') return
+
     // If there's one dot don't add it again
     if (currentOperationInput.textContent.indexOf('.') != -1 && text == '.') {
         return
     }
 
-    // If there's already an operator don't add it again
-    // if ()
-
+    // If there's already an operator don't add it again -> translate current input into previous with the operator and update the value
+    if (text == '+' || text == 'x' || text == '-' || text == '÷') {
+        firstNumber = Number(currentOperationInput.textContent)
+        // If it's first operation, update it with the current input, if not - with the result || if it's the first operation - just make sure there's nothing in the previous
+        if (firstOperation) {
+            updatePreviousOperationInput(currentOperationInput.textContent + text)
+            clearCurrentOperationInput()
+            firstOperation = false
+        } else {
+            updateCurrentOperationInput(result)
+            clearCurrentOperationInput()
+        }
+        
+        
+        return
+    }
+ 
     currentOperationInput.textContent += text
 }
 
@@ -65,7 +82,7 @@ const clearCurrentOperationInput = () => {
 }
 
 const updatePreviousOperationInput = (text) => {
-    previousOperationInput = text
+    previousOperationInput.textContent = text
 }
 
 calculatorOperands.forEach(operand => {
@@ -76,6 +93,8 @@ calculatorOperands.forEach(operand => {
 
 calculatorOperators.forEach(operatoSign => {
     operatoSign.addEventListener('click', () => {
+        updateCurrentOperationInput(operatoSign.textContent)
+
         switch (operatoSign.textContent) {
             case '+':
                 operator = add
@@ -89,14 +108,14 @@ calculatorOperators.forEach(operatoSign => {
             case 'x':
                 operator = multiply
                 break
-        }
-
-        updateCurrentOperationInput(operatoSign.textContent)
+        }   
     })
 })
 
 equals.addEventListener('click', () => {
-    let result = operate(firstNumber, secondNumber, operator)
+    secondNumber = Number(currentOperationInput.textContent)
+    result = operate(firstNumber, secondNumber, operator)
+    operator = null
     clearCurrentOperationInput()
-    updateCurrentOperationInput(result)
+    updatePreviousOperationInput(result)
 })

@@ -6,7 +6,20 @@
     margin: 0;
 }
 
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+}
+
 .calculator {
     border: 1px solid #fff;
     padding: 10px;
+}
+
+.calculator button {
+    width: 100px;
+    height: 100px;
 }
