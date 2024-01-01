@@ -2,4 +2,11 @@
     box-sizing: border-box;
     background-color: black;
     color: #fff;
+    padding: 0;
+    margin: 0;
+}
+
+.calculator {
+    border: 1px solid #fff;
+    padding: 10px;
 }
