@@ -66,7 +66,7 @@ const updateCurrentOperationInput = (text) => {
             clearCurrentOperationInput()
             firstOperation = false
         } else {
-            updateCurrentOperationInput(result)
+            updatePreviousOperationInput(result)
             clearCurrentOperationInput()
         }
         
@@ -82,7 +82,50 @@ const clearCurrentOperationInput = () => {
 }
 
 const updatePreviousOperationInput = (text) => {
+
+    if (previousOperationInput.textContent == '') {
+        if (text == '.' || text == '0' || text == '+' || text == 'x' || text == '-' || text == '÷') {
+            return
+        }
+    } 
+
+    checkForOperator(text)
+
+    
+
+    if (text == '=') return
+
+    // If there's one dot don't add it again
+    if (previousOperationInput.textContent.indexOf('.') != -1 && text == '.') {
+        return
+    }
+
     previousOperationInput.textContent = text
+}
+
+const checkForOperator = (text) => {
+    let regex = /[÷x\-+]/
+    let textMatch = text.match(regex)
+    console.log(textMatch)
+    if (textMatch != null) {
+        updatePreviousOperationInput(previousOperationInput.textContent.replace(textMatch[0], text))
+    }
+}
+
+const replaceOperator = (operatorSign) => {
+    // updatePreviousOperationInput(previousOperationInput.textContent.replace(, operatorSign))
+}
+
+const performCalculation = (operatorSign) => {
+    secondNumber = Number(currentOperationInput.textContent)
+    result = operate(firstNumber, secondNumber, operator)
+    firstNumber = result
+    if (operatorSign != undefined) {
+        updatePreviousOperationInput(result + operatorSign.textContent)
+    } else {
+        updatePreviousOperationInput(result)
+    }
+    clearCurrentOperationInput()
 }
 
 calculatorOperands.forEach(operand => {
@@ -91,11 +134,11 @@ calculatorOperands.forEach(operand => {
     })
 })
 
-calculatorOperators.forEach(operatoSign => {
-    operatoSign.addEventListener('click', () => {
-        updateCurrentOperationInput(operatoSign.textContent)
+calculatorOperators.forEach(operatorSign => {
 
-        switch (operatoSign.textContent) {
+    operatorSign.addEventListener('click', () => {
+
+        switch (operatorSign.textContent) {
             case '+':
                 operator = add
                 break
@@ -108,14 +151,27 @@ calculatorOperators.forEach(operatoSign => {
             case 'x':
                 operator = multiply
                 break
-        }   
+        } 
+
+        if (firstOperation) {
+            updateCurrentOperationInput(operatorSign.textContent)
+        } else {
+            // consider a case when the user pressed equal and when they just keep clicking through operations
+            // when equal the currentOperationField will be empty
+            if (currentOperationInput.textContent == '') {
+                updatePreviousOperationInput(previousOperationInput.textContent + operatorSign.textContent)
+            } else {
+                performCalculation(operatorSign)
+            }
+        }
+        
+        console.log(`First number: ${firstNumber}`)
+        console.log(`Second number: ${secondNumber}`)
+        console.log(`Operator: ${operator}`)
+
     })
 })
 
 equals.addEventListener('click', () => {
-    secondNumber = Number(currentOperationInput.textContent)
-    result = operate(firstNumber, secondNumber, operator)
-    operator = null
-    clearCurrentOperationInput()
-    updatePreviousOperationInput(result)
+    performCalculation()
 })

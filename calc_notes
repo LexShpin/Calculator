@@ -1,0 +1,5 @@
+Bug list:
+	- when there's one sign, you can append another
+	- Pressing equal for the first time before running any operatinon returns NaN
+	- Pressing equal for the first time when running an operation returns NaN
+	- 
