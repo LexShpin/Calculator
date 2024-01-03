@@ -5,8 +5,6 @@ let secondNumber
 let result
 let firstOperation = true
 
-let currentNumber
-
 let operator = null
 let previousOperator = null
 
@@ -84,6 +82,7 @@ const clearCurrentOperationInput = () => {
 
 const updatePreviousOperationInput = (text) => {
 
+    // TODO: Replace this piece of code to account for zero as initial value
     if (previousOperationInput.textContent == '') {
         if (text == '.' || text == '0' || text == '+' || text == 'x' || text == '-' || text == '÷') {
             return
@@ -115,11 +114,22 @@ const performCalculation = (operatorSign, operator) => {
     secondNumber = Number(currentOperationInput.textContent)
     result = operate(firstNumber, secondNumber, operator)
     if (result % 1 != 0) {
-        result = result.toFixed(2)
+        result = Number(result.toFixed(2))
     }
-    firstNumber = result
+    firstNumber = Number(result)
     updatePreviousOperationInput(result + operatorSign)
     clearCurrentOperationInput()
+}
+
+const resetCalculator = () => {
+    firstNumber = 0
+    secondNumber = 0
+    result = 0
+    firstOperation = true
+    operator = null
+    previousOperator = null
+    updateCurrentOperationInput('0')
+    updatePreviousOperationInput('')
 }
 
 calculatorOperands.forEach(operand => {
@@ -150,7 +160,6 @@ calculatorOperators.forEach(operatorSign => {
                 operator = multiply
                 break
         }
-            
 
         if (firstOperation) {
             updateCurrentOperationInput(operatorSign.textContent)
@@ -169,13 +178,14 @@ calculatorOperators.forEach(operatorSign => {
                 
             } else {
                 console.log(operatorSign.textContent);
+                console.log('Equals leads us here');
                 // debugger
                 // If the operator sign is the same, just perform the calculation (happens now)
                 // If the operator is different, first perform the calculation with the current sign, then add another sign to the next previousInput with result
                 if (previousOperator == operator) {
                     performCalculation(operatorSign.textContent, operator)
                 } else {
-                    console.log(operatorSign.textContent);
+                    console.log('And further on, equals leads us here');
                     performCalculation(operatorSign.textContent, previousOperator)
                 }
                 
@@ -190,7 +200,15 @@ calculatorOperators.forEach(operatorSign => {
 })
 
 equals.addEventListener('click', () => {
-    firstNumber = result
+    performCalculation('', operator)
     updatePreviousOperationInput(result)
     clearCurrentOperationInput()
+})
+
+deleteBtn.addEventListener('click', () => {
+    // remove the symbol from the current input and update the value of the first / second number?
+})
+
+clearBtn.addEventListener('click', () => {
+    resetCalculator()
 })
