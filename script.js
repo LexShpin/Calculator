@@ -114,6 +114,9 @@ const replaceOperator = (currentOperator, newOperator) => {
 const performCalculation = (operatorSign, operator) => {
     secondNumber = Number(currentOperationInput.textContent)
     result = operate(firstNumber, secondNumber, operator)
+    if (result % 1 != 0) {
+        result = result.toFixed(2)
+    }
     firstNumber = result
     updatePreviousOperationInput(result + operatorSign)
     clearCurrentOperationInput()
