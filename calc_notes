@@ -1,5 +1,6 @@
 Bug list:
 	- when there's one sign, you can append another
-	- Pressing equal for the first time before running any operatinon returns NaN
-	- Pressing equal for the first time when running an operation returns NaN
-	- 
+	- Pressing equal for the first time before running any operatinon returns NaN [x]
+	- Pressing equal for the first time when running an operation returns NaN [x]
+	- Numbers are not rounded to 2 decimal points
+	- Has to handle keyboard input

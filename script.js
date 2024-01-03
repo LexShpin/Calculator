@@ -87,9 +87,7 @@ const updatePreviousOperationInput = (text) => {
         if (text == '.' || text == '0' || text == '+' || text == 'x' || text == '-' || text == '÷') {
             return
         }
-    } 
-
-    checkForOperator(text)
+    }
 
     
 
@@ -106,25 +104,19 @@ const updatePreviousOperationInput = (text) => {
 const checkForOperator = (text) => {
     let regex = /[÷x\-+]/
     let textMatch = text.match(regex)
-    console.log(textMatch)
-    if (textMatch != null) {
-        updatePreviousOperationInput(previousOperationInput.textContent.replace(textMatch[0], text))
-    }
+
+    return textMatch
 }
 
-const replaceOperator = (operatorSign) => {
-    // updatePreviousOperationInput(previousOperationInput.textContent.replace(, operatorSign))
+const replaceOperator = (currentOperator, newOperator) => {
+    updatePreviousOperationInput(previousOperationInput.textContent.replace(currentOperator, newOperator))
 }
 
 const performCalculation = (operatorSign) => {
     secondNumber = Number(currentOperationInput.textContent)
     result = operate(firstNumber, secondNumber, operator)
     firstNumber = result
-    if (operatorSign != undefined) {
-        updatePreviousOperationInput(result + operatorSign.textContent)
-    } else {
-        updatePreviousOperationInput(result)
-    }
+    updatePreviousOperationInput(result + operatorSign.textContent)
     clearCurrentOperationInput()
 }
 
@@ -159,7 +151,15 @@ calculatorOperators.forEach(operatorSign => {
             // consider a case when the user pressed equal and when they just keep clicking through operations
             // when equal the currentOperationField will be empty
             if (currentOperationInput.textContent == '') {
-                updatePreviousOperationInput(previousOperationInput.textContent + operatorSign.textContent)
+                // Replace the operator if thjere's already one here
+                // If there isn't, just append one
+                let currentOperator = checkForOperator(previousOperationInput.textContent)
+                if (currentOperator == null) {
+                    updatePreviousOperationInput(previousOperationInput.textContent + operatorSign.textContent)
+                } else {
+                    replaceOperator(currentOperator, operatorSign.textContent)
+                }
+                
             } else {
                 performCalculation(operatorSign)
             }
@@ -173,5 +173,7 @@ calculatorOperators.forEach(operatorSign => {
 })
 
 equals.addEventListener('click', () => {
-    performCalculation()
+    firstNumber = result
+    updatePreviousOperationInput(result)
+    clearCurrentOperationInput()
 })
