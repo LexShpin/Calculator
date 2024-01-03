@@ -8,6 +8,7 @@ let firstOperation = true
 let currentNumber
 
 let operator = null
+let previousOperator = null
 
 // Document elements
 const calculatorOperators = document.querySelectorAll('.calculator__operator')
@@ -89,8 +90,6 @@ const updatePreviousOperationInput = (text) => {
         }
     }
 
-    
-
     if (text == '=') return
 
     // If there's one dot don't add it again
@@ -112,11 +111,11 @@ const replaceOperator = (currentOperator, newOperator) => {
     updatePreviousOperationInput(previousOperationInput.textContent.replace(currentOperator, newOperator))
 }
 
-const performCalculation = (operatorSign) => {
+const performCalculation = (operatorSign, operator) => {
     secondNumber = Number(currentOperationInput.textContent)
     result = operate(firstNumber, secondNumber, operator)
     firstNumber = result
-    updatePreviousOperationInput(result + operatorSign.textContent)
+    updatePreviousOperationInput(result + operatorSign)
     clearCurrentOperationInput()
 }
 
@@ -132,18 +131,23 @@ calculatorOperators.forEach(operatorSign => {
 
         switch (operatorSign.textContent) {
             case '+':
+                previousOperator = operator
                 operator = add
                 break
             case '-':
+                previousOperator = operator
                 operator = subtract
                 break
             case '÷':
+                previousOperator = operator
                 operator = divide
                 break
             case 'x':
+                previousOperator = operator
                 operator = multiply
                 break
-        } 
+        }
+            
 
         if (firstOperation) {
             updateCurrentOperationInput(operatorSign.textContent)
@@ -161,7 +165,17 @@ calculatorOperators.forEach(operatorSign => {
                 }
                 
             } else {
-                performCalculation(operatorSign)
+                console.log(operatorSign.textContent);
+                // debugger
+                // If the operator sign is the same, just perform the calculation (happens now)
+                // If the operator is different, first perform the calculation with the current sign, then add another sign to the next previousInput with result
+                if (previousOperator == operator) {
+                    performCalculation(operatorSign.textContent, operator)
+                } else {
+                    console.log(operatorSign.textContent);
+                    performCalculation(operatorSign.textContent, previousOperator)
+                }
+                
             }
         }
         
