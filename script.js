@@ -31,7 +31,7 @@ const multiply = (a, b) => {
 
 const divide = (a, b) => {
     if (a == 0 || b == 0) {
-        updateCurrentOperationInput(`You can't divide by zero, duh!`)
+        alert("You can't divide by zero!")
         return
     } 
     return a / b
@@ -42,19 +42,21 @@ const operate = (firstNumber, secondNumber, operator) => {
 }
 
 const updateCurrentOperationInput = (text) => {
-    // If it's a dot, zero or operator don't add anything
-    if (currentOperationInput.textContent == '') {
-        if (text == '.' || text == '0' || text == '+' || text == 'x' || text == '-' || text == '÷') {
-            return
+
+    if (currentOperationInput.textContent == '0') {
+        if (text == '+' || text == 'x' || text == '-' || text == '÷') {
+            // do nothing
+        } else if (text == '0') {
+            currentOperationInput.textContent = ''
+        } else {
+            currentOperationInput.textContent = ''
         }
     }
 
     if (text == '=') return
 
     // If there's one dot don't add it again
-    if (currentOperationInput.textContent.indexOf('.') != -1 && text == '.') {
-        return
-    }
+    if (currentOperationInput.textContent.indexOf('.') != -1 && text == '.') return
 
     // If there's already an operator don't add it again -> translate current input into previous with the operator and update the value
     if (text == '+' || text == 'x' || text == '-' || text == '÷') {
@@ -78,6 +80,10 @@ const updateCurrentOperationInput = (text) => {
 
 const clearCurrentOperationInput = () => {
     currentOperationInput.textContent = ''
+}
+
+const resetCurrentOperationInput = () => {
+    currentOperationInput.textContent = '0'
 }
 
 const updatePreviousOperationInput = (text) => {
@@ -128,7 +134,7 @@ const resetCalculator = () => {
     firstOperation = true
     operator = null
     previousOperator = null
-    updateCurrentOperationInput('0')
+    resetCurrentOperationInput()
     updatePreviousOperationInput('')
 }
 
@@ -207,6 +213,7 @@ equals.addEventListener('click', () => {
 
 deleteBtn.addEventListener('click', () => {
     // remove the symbol from the current input and update the value of the first / second number?
+    updateCurrentOperationInput()
 })
 
 clearBtn.addEventListener('click', () => {
