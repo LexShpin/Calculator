@@ -11,11 +11,17 @@ let previousOperator = null
 // Document elements
 const calculatorOperators = document.querySelectorAll('.calculator__operator')
 const calculatorOperands = document.querySelectorAll('.calculator__operand')
-const equals = document.getElementById('equals')
 const previousOperationInput = document.querySelector('.previous-operation')
 const currentOperationInput = document.querySelector('.current-operation')
 const clearBtn = document.getElementById('clear-btn')
 const deleteBtn = document.getElementById('delete-btn')
+
+// operators
+const xOperatorBtn = document.querySelector('.x-operator')
+const plusOperatorBtn = document.querySelector('.plus-operator')
+const minusOperatorBtn = document.querySelector('.minus-operator')
+const divisionOperatorBtn = document.querySelector('.division-operator')
+const equalsBtn = document.getElementById('equals')
 
 console.log(0 == null);
 
@@ -90,6 +96,10 @@ const clearCurrentOperationInput = () => {
 
 const resetCurrentOperationInput = () => {
     currentOperationInput.textContent = '0'
+}
+
+const removeLastSymbolFromCurrentOperationInput = () => {
+    if (currentOperationInput.textContent == '0') return
 }
 
 const updatePreviousOperationInput = (text) => {
@@ -192,37 +202,7 @@ const handleOperators = (operatorSign) => {
     }
 }
 
-calculatorOperands.forEach(operand => {
-    operand.addEventListener('click', () => {
-        updateCurrentOperationInput(operand.textContent)
-    })
-})
-
-calculatorOperators.forEach(operatorSign => {
-
-    operatorSign.addEventListener('click', () => {
-
-        handleOperators(operatorSign)
-    })
-})
-
-document.addEventListener('keydown', e => {
-    e.preventDefault()
-
-    // e.key
-    if (e.key >= 0 && e.key <= 9) {
-        updateCurrentOperationInput(e.key)
-    }  
-    
-    if (e.key == '.') {
-        updateCurrentOperationInput(e.key)
-    }
-
-    // if (e.key == 'x')
-})
-
-equals.addEventListener('click', () => {
-
+const handleEqualsOperator = () => {
     if (operator == null) {
         return
     }
@@ -231,6 +211,64 @@ equals.addEventListener('click', () => {
     updatePreviousOperationInput(result)
     clearCurrentOperationInput()
     operator = null
+}
+
+calculatorOperands.forEach(operand => {
+    operand.addEventListener('click', () => {
+        updateCurrentOperationInput(operand.textContent)
+    })
+})
+
+calculatorOperators.forEach(operatorSign => {
+
+    console.log(operatorSign)
+
+    operatorSign.addEventListener('click', () => {
+
+        handleOperators(operatorSign)
+    })
+})
+
+document.addEventListener('keydown', e => {
+    console.log(e.key)
+
+    e.preventDefault()
+
+    if (e.key >= 0 && e.key <= 9) {
+        updateCurrentOperationInput(e.key)
+    }
+
+    switch (e.key) {
+        case '.':
+            updateCurrentOperationInput(e.key)
+            break
+        case 'Backspace':
+            removeLastSymbolFromCurrentOperationInput()
+            break
+        case 'x':
+            handleOperators(xOperatorBtn)
+            break
+        case '/':
+            handleOperators(divisionOperatorBtn)
+            break
+        case '+':
+            handleOperators(plusOperatorBtn)
+            break
+        case '-':
+            handleOperators(minusOperatorBtn)
+            break
+        case 'Enter':
+        case '=':
+            handleEqualsOperator()
+            break
+        default:
+            break
+    }
+
+})
+
+equalsBtn.addEventListener('click', () => {
+    handleEqualsOperator()    
 })
 
 deleteBtn.addEventListener('click', () => {
