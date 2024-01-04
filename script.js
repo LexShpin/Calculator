@@ -1,8 +1,8 @@
 
 // Calculator variables
-let firstNumber
-let secondNumber
-let result
+let firstNumber = null
+let secondNumber = null
+let result = null
 let firstOperation = true
 
 let operator = null
@@ -16,6 +16,8 @@ const previousOperationInput = document.querySelector('.previous-operation')
 const currentOperationInput = document.querySelector('.current-operation')
 const clearBtn = document.getElementById('clear-btn')
 const deleteBtn = document.getElementById('delete-btn')
+
+console.log(0 == null);
 
 const add = (a, b) => {
     return a + b
@@ -48,10 +50,14 @@ const updateCurrentOperationInput = (text) => {
             // do nothing
         } else if (text == '0') {
             currentOperationInput.textContent = ''
+        } else if (text == '.') {
+            currentOperationInput.textContent += text
         } else {
             currentOperationInput.textContent = ''
         }
     }
+
+    if (result != null && operator == null && !firstOperation) return
 
     if (text == '=') return
 
@@ -88,7 +94,6 @@ const resetCurrentOperationInput = () => {
 
 const updatePreviousOperationInput = (text) => {
 
-    // TODO: Replace this piece of code to account for zero as initial value
     if (previousOperationInput.textContent == '') {
         if (text == '.' || text == '0' || text == '+' || text == 'x' || text == '-' || text == '÷') {
             return
@@ -138,6 +143,55 @@ const resetCalculator = () => {
     updatePreviousOperationInput('')
 }
 
+const handleOperators = (operatorSign) => {
+    switch (operatorSign.textContent) {
+        case '+':
+            previousOperator = operator
+            operator = add
+            break
+        case '-':
+            previousOperator = operator
+            operator = subtract
+            break
+        case '÷':
+            previousOperator = operator
+            operator = divide
+            break
+        case 'x':
+            previousOperator = operator
+            operator = multiply
+            break
+    }
+
+    if (firstOperation) {
+        updateCurrentOperationInput(operatorSign.textContent)
+    } else {
+        // consider a case when the user pressed equal and when they just keep clicking through operations
+        // when equal the currentOperationField will be empty
+        if (currentOperationInput.textContent == '') {
+            // Replace the operator if thjere's already one here
+            // If there isn't, just append one
+            let currentOperator = checkForOperator(previousOperationInput.textContent)
+            if (currentOperator == null) {
+                updatePreviousOperationInput(previousOperationInput.textContent + operatorSign.textContent)
+            } else {
+                replaceOperator(currentOperator, operatorSign.textContent)
+            }
+            
+        } else {
+            // debugger
+            // If the operator sign is the same, just perform the calculation (happens now)
+            // If the operator is different, first perform the calculation with the current sign, then add another sign to the next previousInput with result
+            if (previousOperator == operator) {
+                performCalculation(operatorSign.textContent, operator)
+            } else {
+                performCalculation(operatorSign.textContent, previousOperator)
+            }
+            
+        }
+    }
+}
+
 calculatorOperands.forEach(operand => {
     operand.addEventListener('click', () => {
         updateCurrentOperationInput(operand.textContent)
@@ -148,67 +202,35 @@ calculatorOperators.forEach(operatorSign => {
 
     operatorSign.addEventListener('click', () => {
 
-        switch (operatorSign.textContent) {
-            case '+':
-                previousOperator = operator
-                operator = add
-                break
-            case '-':
-                previousOperator = operator
-                operator = subtract
-                break
-            case '÷':
-                previousOperator = operator
-                operator = divide
-                break
-            case 'x':
-                previousOperator = operator
-                operator = multiply
-                break
-        }
-
-        if (firstOperation) {
-            updateCurrentOperationInput(operatorSign.textContent)
-        } else {
-            // consider a case when the user pressed equal and when they just keep clicking through operations
-            // when equal the currentOperationField will be empty
-            if (currentOperationInput.textContent == '') {
-                // Replace the operator if thjere's already one here
-                // If there isn't, just append one
-                let currentOperator = checkForOperator(previousOperationInput.textContent)
-                if (currentOperator == null) {
-                    updatePreviousOperationInput(previousOperationInput.textContent + operatorSign.textContent)
-                } else {
-                    replaceOperator(currentOperator, operatorSign.textContent)
-                }
-                
-            } else {
-                console.log(operatorSign.textContent);
-                console.log('Equals leads us here');
-                // debugger
-                // If the operator sign is the same, just perform the calculation (happens now)
-                // If the operator is different, first perform the calculation with the current sign, then add another sign to the next previousInput with result
-                if (previousOperator == operator) {
-                    performCalculation(operatorSign.textContent, operator)
-                } else {
-                    console.log('And further on, equals leads us here');
-                    performCalculation(operatorSign.textContent, previousOperator)
-                }
-                
-            }
-        }
-        
-        console.log(`First number: ${firstNumber}`)
-        console.log(`Second number: ${secondNumber}`)
-        console.log(`Operator: ${operator}`)
-
+        handleOperators(operatorSign)
     })
 })
 
+document.addEventListener('keydown', e => {
+    e.preventDefault()
+
+    // e.key
+    if (e.key >= 0 && e.key <= 9) {
+        updateCurrentOperationInput(e.key)
+    }  
+    
+    if (e.key == '.') {
+        updateCurrentOperationInput(e.key)
+    }
+
+    // if (e.key == 'x')
+})
+
 equals.addEventListener('click', () => {
+
+    if (operator == null) {
+        return
+    }
+
     performCalculation('', operator)
     updatePreviousOperationInput(result)
     clearCurrentOperationInput()
+    operator = null
 })
 
 deleteBtn.addEventListener('click', () => {
