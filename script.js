@@ -98,8 +98,24 @@ const resetCurrentOperationInput = () => {
     currentOperationInput.textContent = '0'
 }
 
-const removeLastSymbolFromCurrentOperationInput = () => {
+const removeLastSymbol = () => {
+
+    // only remove in the currentOperationInput
     if (currentOperationInput.textContent == '0') return
+
+    let newStr = currentOperationInput.textContent.slice(0, -1)
+
+    console.log(newStr);
+
+    if (newStr == '') {
+        newStr = '0'
+        currentOperationInput.textContent = newStr
+    } else {
+        newStr = currentOperationInput.textContent.slice(0, -1)
+        currentOperationInput.textContent = newStr
+    }
+    
+    
 }
 
 const updatePreviousOperationInput = (text) => {
@@ -243,7 +259,7 @@ document.addEventListener('keydown', e => {
             updateCurrentOperationInput(e.key)
             break
         case 'Backspace':
-            removeLastSymbolFromCurrentOperationInput()
+            removeLastSymbol()
             break
         case 'x':
             handleOperators(xOperatorBtn)
@@ -273,7 +289,7 @@ equalsBtn.addEventListener('click', () => {
 
 deleteBtn.addEventListener('click', () => {
     // remove the symbol from the current input and update the value of the first / second number?
-    updateCurrentOperationInput()
+    removeLastSymbol()
 })
 
 clearBtn.addEventListener('click', () => {

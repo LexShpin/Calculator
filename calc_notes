@@ -12,6 +12,7 @@ Bug list:
 	- Clear button works [x]
 	- Add a case when the user is pressing equals while there's no operator / second number -> has to jsut keep the current input -> currently erases the current input [x] (solved by a check of operator == null and setting it to null after every equal click)
 	- When the user seees the result, output it in the current input until they click on the operator -> currently displayed in the previous and you can input in the current without any operator [x]
-	- Has to handle keyboard input []
+	- Has to handle keyboard input [x]
+	- When the number is negative, the operator gets appended at the beginning instead of a minus sign
 	- Delete button works []
 	- Fix the toFix() TypeError []
